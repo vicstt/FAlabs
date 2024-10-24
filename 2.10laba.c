@@ -12,14 +12,6 @@ int factorial(int num) {
     return result;
 }
 
-double evaluate_polynomial(double a, int n, double* coeffs) {
-    double result = 0.0;
-    for (int i = 0; i <= n; i++) {
-        result += coeffs[i] * pow(a, i);
-    }
-    return result;
-}
-
 double derivative(double a, int n, double* coeffs, int order) {
     double result = 0.0;
     for (int i = order; i <= n; i++) {
@@ -57,11 +49,11 @@ void polynomial_decomposition(double epsilon, double a, double** g_coeffs, int n
 
 int main() {
     double* g_coeffs;
-    double a = 1.0; 
+    double a = 2.0; 
     double epsilon = 0.0001; 
-    int n = 2; 
+    int n = 3; 
 
-    polynomial_decomposition(epsilon, a, &g_coeffs, n, 1.0, -3.0, 2.0);
+    polynomial_decomposition(epsilon, a, &g_coeffs, n, 1.0, 2.0, 3.0, 4.0);
 
     printf("Коэффициенты g(x):\n");
     for (int i = 0; i <= n; i++) {
