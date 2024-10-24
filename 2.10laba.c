@@ -20,7 +20,7 @@ double evaluate_polynomial(double a, int n, double* coeffs) {
     return result;
 }
 
-double derivative_polynomial(double a, int n, double* coeffs, int order) {
+double derivative(double a, int n, double* coeffs, int order) {
     double result = 0.0;
     for (int i = order; i <= n; i++) {
         double coeff = coeffs[i];
@@ -49,7 +49,7 @@ void polynomial_decomposition(double epsilon, double a, double** g_coeffs, int n
     va_end(args);
 
     for (int i = 0; i <= n; i++) {
-        (*g_coeffs)[i] = derivative_polynomial(a, n, f_coeffs, i) / factorial(i);
+        (*g_coeffs)[i] = derivative(a, n, f_coeffs, i) / factorial(i);
     }
 
     free(f_coeffs);
