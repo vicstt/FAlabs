@@ -32,7 +32,7 @@ int convexity(int num_points, ...) {
                 if (cp > 0){
                     sign = 1;
                 } else {
-                    sign = 0;
+                    sign = -1;
                 }
             } else if ((cp > 0 && sign < 0) || (cp < 0 && sign > 0)) {
                 return 0; 
