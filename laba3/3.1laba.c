@@ -22,8 +22,8 @@ void to_base(int number, int r, char *res){
     int index = 0;
     
     if (number == 0){
-        res[sum(index, 1)] = '\0';
         res[index] = '0';
+        res[sum(index, 1)] = '\0';
         return;
     }
 
