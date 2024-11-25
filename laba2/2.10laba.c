@@ -75,10 +75,10 @@ int main() {
     double* g_coeffs;
     double a = 2.0; 
     double epsilon = 0.0001; 
-    int n = 3; 
+    int n = 20; 
     double x = 1.0;
 
-    polynomial_decomposition(epsilon, a, &g_coeffs, n, 1.0, 2.0, 3.0, 4.0);
+    polynomial_decomposition(epsilon, a, &g_coeffs, n, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0);
 
     printf("Коэффициенты g(x):\n");
     for (int i = 0; i <= n; i++) {

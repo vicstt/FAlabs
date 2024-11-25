@@ -52,7 +52,7 @@ int main(int argc, char **argv){
         printf("Неверное количество аргументов.\n");
         return 1;
     }
-    char res[1000];
+    char res[33];
     int num = atoi(argv[1]);
     for (int r = 1; r <= 5; r++){
         to_base(num, r, res);

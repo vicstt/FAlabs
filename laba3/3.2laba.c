@@ -105,9 +105,9 @@ int main() {
     
     vectors[1].n = n;
     vectors[1].data = (double *)malloc(n * sizeof(double));
-    vectors[1].data[0] = -4.0;
-    vectors[1].data[1] = 5.0;
-    vectors[1].data[2] = -6.0;
+    vectors[1].data[0] = 1.0;
+    vectors[1].data[1] = -2.0;
+    vectors[1].data[2] = -7.0;
 
     double **A = malloc(n * sizeof(double *));
     for (int i = 0; i < n; i++) {

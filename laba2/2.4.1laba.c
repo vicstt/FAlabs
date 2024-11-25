@@ -14,7 +14,11 @@ int convexity(int num_points, ...) {
     va_list args;
     va_start(args, num_points);
 
-    Point points[num_points];
+    Point* points = malloc(num_points * sizeof(Point));
+    if (points == NULL) {
+        fprintf(stderr, "Ошибка выделения памяти.\n");
+        return 0; 
+    }
 
     for (int i = 0; i < num_points; i++) {
         points[i].x = va_arg(args, double);
@@ -40,6 +44,7 @@ int convexity(int num_points, ...) {
         }
     }
     
+    free(points);
     return 1; 
 }
 
