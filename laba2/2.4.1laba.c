@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 
 typedef struct {
@@ -16,7 +17,7 @@ int convexity(int num_points, ...) {
 
     Point* points = malloc(num_points * sizeof(Point));
     if (points == NULL) {
-        fprintf(stderr, "Ошибка выделения памяти.\n");
+        printf("Ошибка выделения памяти.\n");
         return 0; 
     }
 
@@ -39,6 +40,7 @@ int convexity(int num_points, ...) {
                     sign = -1;
                 }
             } else if ((cp > 0 && sign < 0) || (cp < 0 && sign > 0)) {
+                free(points);
                 return 0; 
             }
         }

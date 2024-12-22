@@ -1,0 +1,4 @@
+A(B(C,D(E,F)),G(H,I(J,K)))
+A(P,B,C)
+A(B,C(D,E),F,S)
+A(F,S(B(D(Q))),G,U(I,O(Y,T),W))

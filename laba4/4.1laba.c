@@ -5,6 +5,7 @@
 #include <limits.h>
 
 #define HASHSIZE 128
+#define INITIAL_BUFFER_SIZE 1000
 
 typedef struct Macro {
     char* name;
@@ -17,58 +18,56 @@ typedef struct Hashtable {
     int size;
 } Hashtable;
 
-char* strdup(const char* str){
-    if (str == NULL){
+char* strdup(const char* str) {
+    if (str == NULL) {
         return NULL;
     }
     char *dup = (char*)malloc(strlen(str) + 1);
-    if (dup == NULL){
+    if (dup == NULL) {
         return NULL;
     }
     strcpy(dup, str);
     return dup;
 }
 
-Hashtable* create_table(int size){
+Hashtable* create_table(int size) {
     Hashtable* hash_table = (Hashtable*)malloc(sizeof(Hashtable));
-    if (hash_table == NULL){
+    if (hash_table == NULL) {
         printf("Ошибка выделения памяти.");
         return NULL;
     }
     hash_table->size = size;
     hash_table->table = (Macro**)malloc(sizeof(Macro*) * size);
-    if (hash_table->table == NULL){
+    if (hash_table->table == NULL) {
         printf("Ошибка выделения памяти.");
+        free(hash_table);
         return NULL;
     }
-    for (int i = 0; i < size; i++){
+    for (int i = 0; i < size; i++) {
         hash_table->table[i] = NULL;
     }
     return hash_table;
 }
 
-unsigned int hash(const char* key){
+unsigned int hash(const char* key) {
     unsigned long value = 0;
-    while (*key){
-        if (isdigit(*key)){
+    while (*key) {
+        if (isdigit(*key)) {
             value = value * 62 + (*key - '0');
-        }
-        else if (islower(*key)){
+        } else if (islower(*key)) {
             value = value * 62 + (*key - 'a' + 10);
-        } 
-        else if (isupper(*key)){
+        } else if (isupper(*key)) {
             value = value * 62 + (*key - 'A' + 36);
         }
-        key ++;
+        key++;
     }
     return value % HASHSIZE;
-
 }
 
-void insert_macro(Hashtable* hash_table, const char* name, const char* value){
+void insert_macro(Hashtable* hash_table, const char* name, const char* value) {
     int index = hash(name);
     Macro* macro = (Macro*)malloc(sizeof(Macro));
-    if (macro == NULL){
+    if (macro == NULL) {
         printf("Ошибка выделения памяти.");
         return;
     }
@@ -79,7 +78,7 @@ void insert_macro(Hashtable* hash_table, const char* name, const char* value){
 }
 
 Hashtable* rehash(Hashtable* old_table) {
-    int new_size = old_table->size * 2; 
+    int new_size = old_table->size * 2;
     Hashtable* new_table = create_table(new_size);
     
     unsigned int* cached_hashes = (unsigned int*)malloc(sizeof(unsigned int) * old_table->size);
@@ -137,8 +136,8 @@ void check(Hashtable** hash_table) {
     }
 }
 
-int main(int argc, char** argv){
-    if (argc != 2){
+int main(int argc, char** argv) {
+    if (argc != 2) {
         printf("Неверное количество аргументов.\n");
         return 1;
     }
@@ -146,48 +145,51 @@ int main(int argc, char** argv){
     char* input_file = argv[1];
 
     FILE* input = fopen(input_file, "r");
-    if (input == NULL){
+    if (input == NULL) {
         printf("Ошибка при открытии файла.\n");
         return 1;
     }
 
     Hashtable* hash_table = create_table(HASHSIZE);
-    char buffer[1000];
-    char name[1000]; 
-    char value[1000];
+    char* buffer = (char*)malloc(INITIAL_BUFFER_SIZE);
+    if (buffer == NULL) {
+         printf("Ошибка выделения памяти.");
+        return 1;
+    }
+    int buffer_size = INITIAL_BUFFER_SIZE;
     int count_line = 0;
     char* lines[1000];
 
-    while (fgets(buffer, sizeof(buffer), input)){
-        if (strncmp(buffer, "#define", 7) == 0){
-            sscanf(buffer + 8, "%s %[^\n]", name, value);
+    while (fgets(buffer, buffer_size, input)) {
+        if (strncmp(buffer, "#define", 7) == 0) {
+            char* name = strtok(buffer + 8, " ");
+            char* value = strtok(NULL, "\n");
             insert_macro(hash_table, name, value);
-        }
-        else{
+            check(&hash_table);
+        } else {
             lines[count_line] = strdup(buffer);
-            count_line ++;
+            count_line++;
         }
     }
 
-    check(&hash_table);
-
     fclose(input);
+    free(buffer);
 
-    for (int i = 0; i < count_line; i++){
+    for (int i = 0; i < count_line; i++) {
         char* line = lines[i];
         char* res = (char*)malloc(strlen(line) + 1);
-        if (res == NULL){
+        if (res == NULL) {
             printf("Ошибка выделения памяти.");
             return 1;
         }
         strcpy(res, line);
-        for (int j = 0; j < HASHSIZE; j++){
+        for (int j = 0; j < HASHSIZE; j++) {
             Macro* current = hash_table->table[j];
-            while(current){
+            while (current) {
                 char* pos;
-                while ((pos = strstr(res, current->name)) != NULL){
+                while ((pos = strstr(res, current->name)) != NULL) {
                     char* new_line = (char*)malloc(strlen(res) + strlen(current->value) - strlen(current->name) + 1);
-                    if (new_line == NULL){
+                    if (new_line == NULL) {
                         printf("Ошибка выделения памяти.");
                         return 1;
                     }
@@ -206,9 +208,9 @@ int main(int argc, char** argv){
         free(line);
     }
 
-    for (int i = 0; i < HASHSIZE; i++){
+    for (int i = 0; i < HASHSIZE; i++) {
         Macro* current = hash_table->table[i];
-        while (current){
+        while (current) {
             Macro* temp = current;
             current = current->next;
             free(temp->name);

@@ -5,9 +5,6 @@ class binary_int {
 private:
     int value;
 
-public:
-    binary_int(int val = 0) : value(val) {}
-
     int sum(int a, int b) const {
         while (b != 0) {
             int carry = a & b; 
@@ -38,11 +35,14 @@ public:
 	    return result;
     }
 
+public:
+    binary_int(int val = 0) : value(val) {}
+
     binary_int operator-() const {
         return binary_int(sum(~value, 1));
     }
 
-    binary_int& operator++() {  // префиксный
+    binary_int& operator++() {
         value = sum(value, 1);
         return *this;
     }
@@ -124,7 +124,7 @@ public:
         return os;
     }
 
-        std::pair<binary_int, binary_int> split() const {
+    std::pair<binary_int, binary_int> split() const {
         int half_bits = sizeof(int) * 8 / 2;
         int upper = (value >> half_bits) << half_bits; 
         int lower = value & ((1 << half_bits) - 1); 
@@ -132,7 +132,16 @@ public:
     }
 };
 
+binary_int f()
+{
+    return binary_int(5);
+}
+
 int main() {
+
+    // binary_int r = f() += 5;
+    // std::cout << "r = " << r << std::endl;
+
     binary_int a(7); 
     binary_int b(3); 
 
@@ -145,11 +154,10 @@ int main() {
     std::cout << "a + b: " << c << std::endl;
 
     binary_int d = a - b;
-    std::cout << "a - b: " << d << std::endl;
+    std::cout << "a - b: " << a - b << std::endl;
 
 	std::cout << "a++ = " << a++  << ", a = " << a << std::endl;
 	std::cout << "++a = " << ++a << " , a = " << a << std::endl << std::endl;
-
 
 	std::cout << "a-- = " << a--  << ", a = " << a << std::endl;
 	std::cout << "--a = " << --a << " , a = " << a << std::endl << std::endl;
@@ -169,7 +177,6 @@ int main() {
 	std::cout << "a >> 2 = " << g << std::endl;
 	a >>= 2;
 	std::cout << "a >>= 2: " << a << std::endl << std::endl;
-
 
 	binary_int k(545654647);
 	std::cout << "k = " << k << std::endl;

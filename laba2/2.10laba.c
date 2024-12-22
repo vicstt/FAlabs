@@ -35,6 +35,12 @@ void polynomial_decomposition(double epsilon, double a, double** g_coeffs, int n
     va_start(args, n);
 
     double* f_coeffs = (double*)malloc((n + 1) * sizeof(double));
+    if (f_coeffs == NULL) {
+        printf("Ошибка выделения памяти.\n");
+        free(*g_coeffs);
+        return;
+    }
+
     for (int i = 0; i <= n; i++) {
         f_coeffs[i] = va_arg(args, double);
     }
@@ -61,6 +67,11 @@ double f(double x, int n, ...) {
 }
 
 double g(double* coeffs, int n, double a, double x) {
+    if (coeffs == NULL) {
+        printf("Указатель coeffs не инициализирован.\n");
+        return 0.0;
+    }
+
     double result = 0.0;
     double x_a = x - a; 
 
@@ -76,16 +87,16 @@ int main() {
     double a = 2.0; 
     double epsilon = 0.0001; 
     int n = 20; 
-    double x = 1.0;
+    double x = 2.0;
 
     polynomial_decomposition(epsilon, a, &g_coeffs, n, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0);
-
+    
     printf("Коэффициенты g(x):\n");
     for (int i = 0; i <= n; i++) {
         printf("g[%d] = %.5f\n", i, g_coeffs[i]);
     }
     printf("Проверка:\n");
-    double f_value = f(x, n, 1.0, 2.0, 3.0, 4.0);
+    double f_value = f(x, n, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0, 2.0, 3.0, 4.0, 1.0);
     double g_value = g(g_coeffs, n, a, x);
 
     printf("f(%.2f) = %.5f\n", x, f_value);
